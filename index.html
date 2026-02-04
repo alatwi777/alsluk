@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام متابعة السلوك للطلاب مع الفصول</title>
+    <title>نظام متابعة السلوك للطلاب - مع الإضافة الدفعة الواحدة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -271,7 +271,111 @@
             display: block;
         }
         
-        /* تصميم مربع إضافة الطالب */
+        /* تصميم قسم الإضافة الدفعة الواحدة */
+        .batch-add-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 30px;
+            border-right: 6px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .batch-add-section.collapsed {
+            margin-bottom: 15px;
+            padding: 15px 25px;
+        }
+        
+        .batch-add-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .batch-add-section.collapsed .batch-add-header {
+            margin-bottom: 0;
+        }
+        
+        .batch-add-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .batch-add-title i {
+            margin-left: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .toggle-batch-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-batch-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .batch-add-content {
+            overflow: hidden;
+            transition: var(--transition);
+            max-height: 500px;
+        }
+        
+        .batch-add-section.collapsed .batch-add-content {
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .batch-textarea {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            background-color: white;
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+            font-family: inherit;
+        }
+        
+        .batch-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .batch-textarea-info {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .batch-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        /* تصميم مربع إضافة الطالب الفردي */
         .add-student-section {
             display: flex;
             align-items: center;
@@ -349,6 +453,28 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4);
             background: linear-gradient(135deg, #3ab7e0, #238175);
+        }
+        
+        .batch-add-btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
+        }
+        
+        .batch-add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(114, 9, 183, 0.4);
+            background: linear-gradient(135deg, var(--secondary-dark), #d0006f);
         }
         
         /* تصميم الطلاب والجداول */
@@ -638,17 +764,17 @@
                 margin-bottom: 5px;
             }
             
-            .add-student-section {
+            .add-student-section, .batch-buttons {
                 flex-wrap: wrap;
             }
             
-            .class-select, .student-input {
+            .class-select, .student-input, .batch-textarea {
                 margin-bottom: 15px;
                 margin-left: 0;
                 width: 100%;
             }
             
-            .add-btn {
+            .add-btn, .batch-add-btn {
                 width: 100%;
             }
         }
@@ -693,6 +819,16 @@
             .class-tabs {
                 justify-content: flex-start;
             }
+            
+            .batch-add-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toggle-batch-btn {
+                margin-top: 10px;
+                align-self: flex-start;
+            }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -700,8 +836,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-user-graduate header-icon"></i> نظام متابعة السلوك للطلاب مع الفصول</h1>
-            <p>نظام متكامل لمتابعة وتقييم سلوك الطلاب في المراحل المتوسطة مع إمكانية البحث المتقدم وتصنيف الطلاب حسب الفصول</p>
+            <h1><i class="fas fa-user-graduate header-icon"></i> نظام متابعة السلوك للطلاب مع الإضافة الدفعة الواحدة</h1>
+            <p>نظام متكامل لمتابعة وتقييم سلوك الطلاب في المراحل المتوسطة مع إمكانية إضافة طلاب دفعة واحدة والبحث المتقدم</p>
         </div>
         
         <div class="search-container">
@@ -709,7 +845,7 @@
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" class="search-input" id="search-input" placeholder="ابحث عن طالب بإدخال حرف أو اسم...">
             </div>
-            <div class="search-info">ابحث عن أي طالب بأي حرف من اسمه - البحث ديناميكي يعرض النتائج فوراً</div>
+            <div class="search-info">ابحث عن أي طالب بأي حرف من اسمه - البحث ديناميكي يعرض جميع النتائج</div>
             <div id="search-results-info" class="search-result-info" style="display: none;"></div>
         </div>
         
@@ -728,6 +864,35 @@
             
             <!-- تبويب الأول متوسط -->
             <div id="first" class="tab-content active">
+                <div class="batch-add-section" id="batch-add-first">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الأول متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-first">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-first" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-first">
+                                <option value="first-1">أول ١</option>
+                                <option value="first-2">أول ٢</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-first">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="class-tabs-container">
                     <div class="class-tabs">
                         <button class="class-tab-btn active" data-class="first-1">
@@ -780,6 +945,35 @@
             
             <!-- تبويب الثاني متوسط -->
             <div id="second" class="tab-content">
+                <div class="batch-add-section" id="batch-add-second">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الثاني متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-second">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-second" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-second">
+                                <option value="second-1">ثاني ١</option>
+                                <option value="second-2">ثاني ٢</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-second">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="class-tabs-container">
                     <div class="class-tabs">
                         <button class="class-tab-btn active" data-class="second-1">
@@ -832,6 +1026,36 @@
             
             <!-- تبويب الثالث متوسط -->
             <div id="third" class="tab-content">
+                <div class="batch-add-section" id="batch-add-third">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الثالث متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-third">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-third" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-third">
+                                <option value="third-1">ثالث ١</option>
+                                <option value="third-2">ثالث ٢</option>
+                                <option value="third-3">ثالث ٣</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-third">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="class-tabs-container">
                     <div class="class-tabs">
                         <button class="class-tab-btn active" data-class="third-1">
@@ -907,7 +1131,7 @@
         
         <div class="footer">
             <p>جميع البيانات محفوظة تلقائياً في متصفحك. يمكنك العودة في أي وقت لمتابعة سلوك الطلاب حسب الصف والفصل.</p>
-            <p><i class="fas fa-graduation-cap"></i> نظام متابعة السلوك للطلاب مع الفصول - إصدار 3.0 © 2023</p>
+            <p><i class="fas fa-graduation-cap"></i> نظام متابعة السلوك للطلاب مع الإضافة الدفعة الواحدة - إصدار 4.0 © 2023</p>
         </div>
     </div>
 
@@ -940,7 +1164,28 @@
             return text.replace(regex, '<span class="search-highlight">$1</span>');
         }
         
-        // دالة للبحث عن الطلاب
+        // دالة لفرز الطلاب أبجدياً
+        function sortStudentsAlphabetically(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const studentItems = Array.from(container.querySelectorAll('.student-item'));
+            
+            if (studentItems.length <= 1) return;
+            
+            studentItems.sort((a, b) => {
+                const nameA = a.querySelector('.student-name span').textContent.trim();
+                const nameB = b.querySelector('.student-name span').textContent.trim();
+                return nameA.localeCompare(nameB, 'ar');
+            });
+            
+            // إعادة ترتيب العناصر في الحاوية
+            studentItems.forEach(item => {
+                container.appendChild(item);
+            });
+        }
+        
+        // دالة محسنة للبحث عن الطلاب
         function searchStudents(searchTerm) {
             const resultsInfo = document.getElementById('search-results-info');
             
@@ -974,11 +1219,16 @@
             
             // البحث عن الطلاب الذين تتطابق أسماؤهم مع مصطلح البحث
             let foundCount = 0;
+            const searchTermLower = searchTerm.toLowerCase();
+            
             document.querySelectorAll('.student-name span').forEach(nameElement => {
                 const studentName = nameElement.textContent;
                 const studentItem = nameElement.closest('.student-item');
                 
-                if (studentName.includes(searchTerm)) {
+                // البحث باستخدام includes مع تحويل للنص العربي
+                if (studentName.toLowerCase().includes(searchTermLower) || 
+                    normalizeArabicText(studentName).includes(normalizeArabicText(searchTerm))) {
+                    
                     studentItem.style.display = 'block';
                     
                     // تسليط الضوء على النص المطابق
@@ -999,6 +1249,65 @@
                 resultsInfo.innerHTML = `لا توجد نتائج للبحث عن "${searchTerm}"`;
                 resultsInfo.style.display = 'block';
             }
+        }
+        
+        // دالة لتطبيع النص العربي (لتحسين البحث)
+        function normalizeArabicText(text) {
+            return text
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/[ة]/g, 'ه')
+                .replace(/[يى]/g, 'ي')
+                .replace(/[ؤ]/g, 'و')
+                .replace(/[ئ]/g, 'ي')
+                .toLowerCase();
+        }
+        
+        // دالة لإضافة طلاب دفعة واحدة
+        function addStudentsBatch(grade, classId) {
+            const textareaId = `batch-text-${grade}`;
+            const textarea = document.getElementById(textareaId);
+            const namesText = textarea.value.trim();
+            
+            if (!namesText) {
+                alert('الرجاء إدخال أسماء الطلاب');
+                return;
+            }
+            
+            // تقسيم النص إلى أسطر وإزالة الأسطر الفارغة
+            const names = namesText.split('\n')
+                .map(name => name.trim())
+                .filter(name => name.length > 0);
+            
+            if (names.length === 0) {
+                alert('الرجاء إدخال أسماء صحيحة');
+                return;
+            }
+            
+            // الحصول على اسم الفصل
+            const className = classesStructure[grade][parseInt(classId.split('-')[1]) - 1];
+            
+            // إضافة كل اسم
+            let addedCount = 0;
+            names.forEach(name => {
+                if (name && name.trim().length > 0) {
+                    addStudentToDOM(classId, name.trim(), className);
+                    addedCount++;
+                }
+            });
+            
+            // إفراغ مربع النص بعد الإضافة
+            textarea.value = '';
+            
+            // فرز الطلاب أبجدياً بعد الإضافة
+            setTimeout(() => {
+                sortStudentsAlphabetically(`students-container-${classId}`);
+            }, 100);
+            
+            // حفظ البيانات
+            saveData();
+            
+            // إظهار رسالة نجاح
+            alert(`تم إضافة ${addedCount} طالب بنجاح إلى الفصل ${className}`);
         }
         
         // دالة لحفظ البيانات في localStorage
@@ -1065,7 +1374,12 @@
                     if (container) {
                         container.innerHTML = '';
                         
-                        data[classId].forEach(studentData => {
+                        // فرز الطلاب أبجدياً قبل إضافتهم
+                        const sortedStudents = data[classId].sort((a, b) => {
+                            return a.name.localeCompare(b.name, 'ar');
+                        });
+                        
+                        sortedStudents.forEach(studentData => {
                             addStudentToDOM(classId, studentData.name, studentData.class, studentData.id, studentData.score, studentData.rows);
                         });
                     }
@@ -1297,6 +1611,27 @@
                 });
             });
             
+            // دالة لإخفاء/إظهار قسم الإضافة الدفعة الواحدة
+            function setupBatchSectionToggle(grade) {
+                const toggleBtn = document.getElementById(`toggle-batch-${grade}`);
+                const batchSection = document.getElementById(`batch-add-${grade}`);
+                
+                toggleBtn.addEventListener('click', function() {
+                    batchSection.classList.toggle('collapsed');
+                    
+                    if (batchSection.classList.contains('collapsed')) {
+                        toggleBtn.innerHTML = '<i class="fas fa-eye"></i> إظهار';
+                    } else {
+                        toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء';
+                    }
+                });
+            }
+            
+            // إعداد أزرار إخفاء/إظهار الإضافة الدفعة الواحدة
+            setupBatchSectionToggle('first');
+            setupBatchSectionToggle('second');
+            setupBatchSectionToggle('third');
+            
             // دالة لإنشاء مستمعات الأحداث لأزرار إضافة الطلاب
             function setupAddStudentListeners() {
                 // إعداد المستمعات لأزرار إضافة الطلاب لكل فصل
@@ -1305,6 +1640,7 @@
                         const classNum = index + 1;
                         const classId = `${grade}-${classNum}`;
                         
+                        // زر إضافة طالب فردي
                         const addButton = document.getElementById(`add-student-${classId}`);
                         if (addButton) {
                             addButton.addEventListener('click', function() {
@@ -1314,6 +1650,12 @@
                                 if (studentName) {
                                     addStudentToDOM(classId, studentName, className);
                                     input.value = '';
+                                    
+                                    // فرز الطلاب أبجدياً بعد الإضافة
+                                    setTimeout(() => {
+                                        sortStudentsAlphabetically(`students-container-${classId}`);
+                                    }, 100);
+                                    
                                     saveData();
                                 } else {
                                     alert('الرجاء إدخال اسم الطالب');
@@ -1331,6 +1673,16 @@
                             });
                         }
                     });
+                    
+                    // زر إضافة طلاب دفعة واحدة
+                    const batchAddBtn = document.getElementById(`batch-add-btn-${grade}`);
+                    if (batchAddBtn) {
+                        batchAddBtn.addEventListener('click', function() {
+                            const classSelect = document.getElementById(`batch-class-select-${grade}`);
+                            const selectedClass = classSelect.value;
+                            addStudentsBatch(grade, selectedClass);
+                        });
+                    }
                 }
             }
             
@@ -1339,6 +1691,14 @@
             
             // حفظ البيانات عند إغلاق الصفحة
             window.addEventListener('beforeunload', saveData);
+            
+            // فرز الطلاب أبجدياً عند تحميل الصفحة
+            setTimeout(() => {
+                const allContainers = document.querySelectorAll('[id^="students-container-"]');
+                allContainers.forEach(container => {
+                    sortStudentsAlphabetically(container.id);
+                });
+            }, 500);
         });
     </script>
 </body>
