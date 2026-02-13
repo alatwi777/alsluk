@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متوسطة الحسين بن علي</title>
+    <title>نظام متابعة السلوك المتكامل للطلاب</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -17,6 +17,9 @@
             --dark-color: #212529;
             --gray-color: #6c757d;
             --light-gray: #e9ecef;
+            --warning-color: #ff9e00;
+            --danger-color: #e63946;
+            --info-color: #00b4d8;
             --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.05);
             --radius: 12px;
@@ -152,6 +155,7 @@
             background: linear-gradient(to right, #f8f9fa, #ffffff);
             padding: 10px;
             border-bottom: 2px solid var(--light-gray);
+            flex-wrap: wrap;
         }
         
         .tab-btn {
@@ -540,7 +544,7 @@
             box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
         }
         
-        /* تصميم الجدول المحسن */
+        /* تصميم الجدول المحسن مع السلوكيات الجديدة */
         .student-table {
             width: 100%;
             border-collapse: separate;
@@ -624,6 +628,28 @@
         .behavior-checkbox:hover {
             border-color: var(--primary-color);
             transform: scale(1.1);
+        }
+        
+        /* تصميم مربع النص للسلوك الآخر */
+        .other-behavior-input {
+            width: 120px;
+            padding: 8px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            background-color: white;
+            transition: var(--transition);
+        }
+        
+        .other-behavior-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .other-behavior-input:disabled {
+            background-color: #f5f5f5;
+            opacity: 0.5;
         }
         
         /* تصميم عمود التاريخ */
@@ -716,18 +742,219 @@
             border: 2px dashed var(--light-gray);
         }
         
-        /* تصميم الفوتر */
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 25px;
-            color: var(--gray-color);
-            font-size: 0.95rem;
-            border-top: 1px solid var(--light-gray);
+        /* تصميم الكشف النهائي */
+        .final-report-section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-top: 6px solid var(--success-color);
         }
         
-        .footer p {
-            margin-bottom: 10px;
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .report-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .report-title i {
+            margin-left: 15px;
+            color: var(--success-color);
+        }
+        
+        .report-stats {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .report-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .report-filter-select {
+            padding: 12px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+            min-width: 200px;
+            cursor: pointer;
+        }
+        
+        .report-filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .refresh-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--info-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 180, 216, 0.3);
+        }
+        
+        .report-table-container {
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .report-table thead {
+            background: linear-gradient(135deg, #4a4e69, #3a3d5c);
+        }
+        
+        .report-table th {
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .report-table th:first-child {
+            border-top-right-radius: var(--radius-sm);
+        }
+        
+        .report-table th:last-child {
+            border-top-left-radius: var(--radius-sm);
+            border-right: none;
+        }
+        
+        .report-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--light-gray);
+            background-color: white;
+        }
+        
+        .report-table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .report-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .report-table tbody tr:nth-child(even) td {
+            background-color: #f8f9fa;
+        }
+        
+        .score-excellent {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-good {
+            background: linear-gradient(135deg, #2196f3, #1e88e5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-average {
+            background: linear-gradient(135deg, #ff9800, #fb8c00);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-poor {
+            background: linear-gradient(135deg, #f44336, #e53935);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .export-btn {
+            margin-top: 25px;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--success-color), #2a9d8f);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4);
         }
         
         /* تصميم نتائج البحث */
@@ -748,6 +975,20 @@
             box-shadow: var(--shadow-light);
         }
         
+        /* تصميم الفوتر */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+        }
+        
         /* تصميم متجاوب */
         @media (max-width: 992px) {
             .header h1 {
@@ -764,17 +1005,22 @@
                 margin-bottom: 5px;
             }
             
-            .add-student-section, .batch-buttons {
+            .add-student-section, .batch-buttons, .report-header, .report-filters {
                 flex-wrap: wrap;
             }
             
-            .class-select, .student-input, .batch-textarea {
+            .class-select, .student-input, .batch-textarea, .report-filter-select {
                 margin-bottom: 15px;
                 margin-left: 0;
                 width: 100%;
             }
             
-            .add-btn, .batch-add-btn {
+            .add-btn, .batch-add-btn, .refresh-btn, .export-btn {
+                width: 100%;
+            }
+            
+            .report-stats {
+                flex-direction: column;
                 width: 100%;
             }
         }
@@ -829,6 +1075,10 @@
                 margin-top: 10px;
                 align-self: flex-start;
             }
+            
+            .other-behavior-input {
+                width: 80px;
+            }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -836,8 +1086,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><i class="fas fa-user-graduate header-icon"></i> متوسطة الحسين بن علي</h1>
-            <p>نظام المتابعة وتقييم سلوك الطلاب  </p>
+            <h1><i class="fas fa-user-graduate header-icon"></i> نظام متابعة السلوك المتكامل للطلاب</h1>
+            <p>نظام متكامل لمتابعة وتقييم سلوك الطلاب مع إمكانية إضافة سلوكيات متنوعة وكشف نهائي للدرجات</p>
         </div>
         
         <div class="search-container">
@@ -859,6 +1109,9 @@
                 </button>
                 <button class="tab-btn" data-tab="third">
                     <i class="fas fa-graduation-cap"></i> الثالث متوسط
+                </button>
+                <button class="tab-btn" data-tab="final">
+                    <i class="fas fa-file-alt"></i> الكشف النهائي
                 </button>
             </div>
             
@@ -1127,11 +1380,91 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- تبويب الكشف النهائي -->
+            <div id="final" class="tab-content">
+                <div class="final-report-section">
+                    <div class="report-header">
+                        <div class="report-title">
+                            <i class="fas fa-file-alt"></i> الكشف النهائي للطلاب
+                        </div>
+                        <div class="report-stats">
+                            <div class="stat-box">
+                                <div class="stat-number" id="total-students">0</div>
+                                <div class="stat-label">إجمالي الطلاب</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number" id="avg-score">0</div>
+                                <div class="stat-label">متوسط الدرجات</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-filters">
+                        <select class="report-filter-select" id="filter-grade">
+                            <option value="all">جميع الصفوف</option>
+                            <option value="first">الأول متوسط</option>
+                            <option value="second">الثاني متوسط</option>
+                            <option value="third">الثالث متوسط</option>
+                        </select>
+                        
+                        <select class="report-filter-select" id="filter-class">
+                            <option value="all">جميع الفصول</option>
+                            <option value="first-1">أول ١</option>
+                            <option value="first-2">أول ٢</option>
+                            <option value="second-1">ثاني ١</option>
+                            <option value="second-2">ثاني ٢</option>
+                            <option value="third-1">ثالث ١</option>
+                            <option value="third-2">ثالث ٢</option>
+                            <option value="third-3">ثالث ٣</option>
+                        </select>
+                        
+                        <select class="report-filter-select" id="filter-score">
+                            <option value="all">جميع الدرجات</option>
+                            <option value="excellent">ممتاز (90-100)</option>
+                            <option value="good">جيد جداً (80-89)</option>
+                            <option value="average">جيد (70-79)</option>
+                            <option value="poor">مقبول (أقل من 70)</option>
+                        </select>
+                        
+                        <button class="refresh-btn" id="refresh-report">
+                            <i class="fas fa-sync-alt"></i> تحديث النتائج
+                        </button>
+                    </div>
+                    
+                    <div class="report-table-container">
+                        <table class="report-table" id="report-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الطالب</th>
+                                    <th>الصف</th>
+                                    <th>الفصل</th>
+                                    <th>الدرجة</th>
+                                    <th>التقييم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 50px;">
+                                        <i class="fas fa-info-circle" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                                        لا توجد بيانات لعرضها
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="export-btn" id="export-report">
+                        <i class="fas fa-download"></i> تصدير التقرير
+                    </button>
+                </div>
+            </div>
         </div>
         
         <div class="footer">
-            <p>جميع البيانات محفوظة تلقائياً في متصفحك. يمكنك العودة في أي وقت لمتابعة سلوك الطلاب حسب الصف والفصل.</p>
-            <p><i class="fas fa-graduation-cap"></i> نظام متابعة السلوك للطلاب مع الإضافة الدفعة الواحدة - إصدار 4.0 © 2023</p>
+            <p>جميع البيانات محفوظة تلقائياً في متصفحك. يمكنك العودة في أي وقت لمتابعة سلوك الطلاب.</p>
+            <p><i class="fas fa-graduation-cap"></i> نظام متابعة السلوك المتكامل للطلاب - إصدار 5.0 © 2023</p>
         </div>
     </div>
 
@@ -1142,6 +1475,16 @@
             'second': ['ثاني ١', 'ثاني ٢'],
             'third': ['ثالث ١', 'ثالث ٢', 'ثالث ٣']
         };
+        
+        // تعريف قائمة السلوكيات
+        const behaviors = [
+            { id: 'talked', name: 'تحدث' },
+            { id: 'forgotBook', name: 'نسي الكتاب' },
+            { id: 'late', name: 'متأخر' },
+            { id: 'forgotPen', name: 'نسي القلم' },
+            { id: 'sleeping', name: 'نائم' },
+            { id: 'other', name: 'أخرى' }
+        ];
         
         // دالة للحصول على التاريخ الهجري
         function getHijriDate() {
@@ -1183,6 +1526,17 @@
             studentItems.forEach(item => {
                 container.appendChild(item);
             });
+        }
+        
+        // دالة لتطبيع النص العربي (لتحسين البحث)
+        function normalizeArabicText(text) {
+            return text
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/[ة]/g, 'ه')
+                .replace(/[يى]/g, 'ي')
+                .replace(/[ؤ]/g, 'و')
+                .replace(/[ئ]/g, 'ي')
+                .toLowerCase();
         }
         
         // دالة محسنة للبحث عن الطلاب
@@ -1251,15 +1605,37 @@
             }
         }
         
-        // دالة لتطبيع النص العربي (لتحسين البحث)
-        function normalizeArabicText(text) {
-            return text
-                .replace(/[أإآ]/g, 'ا')
-                .replace(/[ة]/g, 'ه')
-                .replace(/[يى]/g, 'ي')
-                .replace(/[ؤ]/g, 'و')
-                .replace(/[ئ]/g, 'ي')
-                .toLowerCase();
+        // دالة لحساب عدد المربعات المحددة في صف معين
+        function countCheckedBehaviors(row) {
+            const checkboxes = row.querySelectorAll('.behavior-checkbox:checked');
+            const otherInput = row.querySelector('.other-behavior-input');
+            
+            // إذا كان مربع "أخرى" محدداً، نضيف 1 للنقاط
+            const otherChecked = row.querySelector('.other-checkbox')?.checked || false;
+            
+            return checkboxes.length + (otherChecked ? 1 : 0);
+        }
+        
+        // دالة لتحديث النتيجة عند تغيير مربعات الاختيار
+        function updateScore(row, studentItem) {
+            const scoreElement = studentItem.querySelector('.student-score');
+            let currentScore = parseInt(scoreElement.textContent);
+            
+            // حساب عدد المربعات المحددة قبل وبعد التغيير
+            const checkedCount = countCheckedBehaviors(row);
+            
+            // إعادة حساب النتيجة بناءً على جميع الصفوف
+            const allRows = studentItem.querySelectorAll('tbody tr');
+            let totalDeductions = 0;
+            
+            allRows.forEach(r => {
+                totalDeductions += countCheckedBehaviors(r) * 2;
+            });
+            
+            const newScore = Math.min(100, Math.max(0, 100 - totalDeductions));
+            scoreElement.textContent = newScore;
+            
+            return newScore;
         }
         
         // دالة لإضافة طلاب دفعة واحدة
@@ -1306,6 +1682,9 @@
             // حفظ البيانات
             saveData();
             
+            // تحديث الكشف النهائي إذا كان نشطاً
+            updateFinalReport();
+            
             // إظهار رسالة نجاح
             alert(`تم إضافة ${addedCount} طالب بنجاح إلى الفصل ${className}`);
         }
@@ -1342,10 +1721,13 @@
                         const rowData = {
                             date: row.querySelector('.date-column').textContent,
                             behaviors: {
-                                talked: row.querySelector('.talked-checkbox').checked,
-                                forgotBook: row.querySelector('.forgot-book-checkbox').checked,
-                                late: row.querySelector('.late-checkbox').checked,
-                                forgotPen: row.querySelector('.forgot-pen-checkbox').checked
+                                talked: row.querySelector('.talked-checkbox')?.checked || false,
+                                forgotBook: row.querySelector('.forgot-book-checkbox')?.checked || false,
+                                late: row.querySelector('.late-checkbox')?.checked || false,
+                                forgotPen: row.querySelector('.forgot-pen-checkbox')?.checked || false,
+                                sleeping: row.querySelector('.sleeping-checkbox')?.checked || false,
+                                other: row.querySelector('.other-checkbox')?.checked || false,
+                                otherText: row.querySelector('.other-behavior-input')?.value || ''
                             }
                         };
                         studentData.rows.push(rowData);
@@ -1385,6 +1767,11 @@
                     }
                 }
             }
+            
+            // تحديث الكشف النهائي
+            setTimeout(() => {
+                updateFinalReport();
+            }, 500);
         }
         
         // دالة لإضافة طالب إلى DOM
@@ -1427,6 +1814,9 @@
                             <th>نسي الكتاب</th>
                             <th>متأخر</th>
                             <th>نسي القلم</th>
+                            <th>نائم</th>
+                            <th>أخرى</th>
+                            <th>وصف أخرى</th>
                             <th>حذف</th>
                         </tr>
                     </thead>
@@ -1468,6 +1858,7 @@
                     }
                     
                     saveData();
+                    updateFinalReport();
                 }
             });
             
@@ -1475,6 +1866,7 @@
             studentItem.querySelector('.add-row-btn').addEventListener('click', function() {
                 addRowToStudent(studentId);
                 saveData();
+                updateFinalReport();
             });
             
             return studentId;
@@ -1485,7 +1877,6 @@
             const tbody = document.getElementById(`tbody-${studentId}`);
             const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
             const scoreElement = studentItem.querySelector('.student-score');
-            let currentScore = parseInt(scoreElement.textContent);
             
             // استخدام التاريخ المقدم أو توليد تاريخ جديد
             const rowDate = date || `${getHijriDate()}`;
@@ -1498,6 +1889,9 @@
                 <td><input type="checkbox" class="behavior-checkbox forgot-book-checkbox"></td>
                 <td><input type="checkbox" class="behavior-checkbox late-checkbox"></td>
                 <td><input type="checkbox" class="behavior-checkbox forgot-pen-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox sleeping-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox other-checkbox"></td>
+                <td><input type="text" class="other-behavior-input" placeholder="وصف السلوك" disabled></td>
                 <td><button class="delete-row" title="حذف الصف"><i class="fas fa-trash-alt"></i></button></td>
             `;
             
@@ -1505,45 +1899,216 @@
             
             // تعيين حالة مربعات الاختيار إذا كانت موجودة
             if (behaviors) {
-                row.querySelector('.talked-checkbox').checked = behaviors.talked;
-                row.querySelector('.forgot-book-checkbox').checked = behaviors.forgotBook;
-                row.querySelector('.late-checkbox').checked = behaviors.late;
-                row.querySelector('.forgot-pen-checkbox').checked = behaviors.forgotPen;
+                row.querySelector('.talked-checkbox').checked = behaviors.talked || false;
+                row.querySelector('.forgot-book-checkbox').checked = behaviors.forgotBook || false;
+                row.querySelector('.late-checkbox').checked = behaviors.late || false;
+                row.querySelector('.forgot-pen-checkbox').checked = behaviors.forgotPen || false;
+                row.querySelector('.sleeping-checkbox').checked = behaviors.sleeping || false;
+                row.querySelector('.other-checkbox').checked = behaviors.other || false;
                 
-                // تحديث النتيجة بناءً على السلوكيات المحملة
-                const checkedCount = Object.values(behaviors).filter(v => v).length;
-                currentScore -= checkedCount * 2;
-                scoreElement.textContent = currentScore;
+                const otherInput = row.querySelector('.other-behavior-input');
+                otherInput.value = behaviors.otherText || '';
+                otherInput.disabled = !behaviors.other;
             }
+            
+            // تحديث النتيجة الأولية
+            updateScore(row, studentItem);
             
             // إضافة مستمعات الأحداث لمربعات الاختيار
             const checkboxes = row.querySelectorAll('.behavior-checkbox');
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        currentScore -= 2;
-                    } else {
-                        currentScore += 2;
+                    // تفعيل/تعطيل مربع النص للسلوك "أخرى"
+                    if (checkbox.classList.contains('other-checkbox')) {
+                        const otherInput = row.querySelector('.other-behavior-input');
+                        otherInput.disabled = !checkbox.checked;
+                        if (!checkbox.checked) {
+                            otherInput.value = '';
+                        }
                     }
                     
-                    // التأكد من عدم تجاوز النسبة 100 أو أن تصبح أقل من 0
-                    currentScore = Math.min(100, Math.max(0, currentScore));
-                    scoreElement.textContent = currentScore;
-                    
+                    updateScore(row, studentItem);
                     saveData();
+                    updateFinalReport();
                 });
+            });
+            
+            // إضافة مستمع حدث لمربع النص للسلوك "أخرى"
+            const otherInput = row.querySelector('.other-behavior-input');
+            otherInput.addEventListener('input', function() {
+                saveData();
             });
             
             // إضافة مستمع حدث لحذف الصف
             row.querySelector('.delete-row').addEventListener('click', function() {
-                // حساب عدد المربعات المحددة في هذا الصف قبل حذفه
-                const checkedCheckboxes = row.querySelectorAll('.behavior-checkbox:checked');
-                currentScore += checkedCheckboxes.length * 2;
-                scoreElement.textContent = Math.min(100, currentScore);
-                
                 row.remove();
+                
+                // إعادة حساب النتيجة بعد حذف الصف
+                const allRows = studentItem.querySelectorAll('tbody tr');
+                let totalDeductions = 0;
+                
+                allRows.forEach(r => {
+                    totalDeductions += countCheckedBehaviors(r) * 2;
+                });
+                
+                const newScore = Math.min(100, Math.max(0, 100 - totalDeductions));
+                scoreElement.textContent = newScore;
+                
                 saveData();
+                updateFinalReport();
             });
+        }
+        
+        // دالة لتحديث الكشف النهائي
+        function updateFinalReport() {
+            const filterGrade = document.getElementById('filter-grade').value;
+            const filterClass = document.getElementById('filter-class').value;
+            const filterScore = document.getElementById('filter-score').value;
+            
+            const reportBody = document.getElementById('report-table-body');
+            const totalStudentsEl = document.getElementById('total-students');
+            const avgScoreEl = document.getElementById('avg-score');
+            
+            // جمع جميع الطلاب
+            const allStudents = [];
+            document.querySelectorAll('.student-item').forEach(student => {
+                const name = student.querySelector('.student-name span').textContent;
+                const classElement = student.querySelector('.student-class').textContent;
+                const score = parseInt(student.querySelector('.student-score').textContent);
+                
+                // تحديد الصف والفصل
+                let grade = '';
+                let classNum = '';
+                
+                if (classElement.includes('أول')) {
+                    grade = 'first';
+                    classNum = classElement.includes('١') ? 'first-1' : 'first-2';
+                } else if (classElement.includes('ثاني')) {
+                    grade = 'second';
+                    classNum = classElement.includes('١') ? 'second-1' : 'second-2';
+                } else if (classElement.includes('ثالث')) {
+                    grade = 'third';
+                    if (classElement.includes('١')) classNum = 'third-1';
+                    else if (classElement.includes('٢')) classNum = 'third-2';
+                    else if (classElement.includes('٣')) classNum = 'third-3';
+                }
+                
+                allStudents.push({
+                    name,
+                    class: classElement,
+                    grade,
+                    classNum,
+                    score
+                });
+            });
+            
+            // تطبيق الفلاتر
+            let filteredStudents = allStudents.filter(student => {
+                if (filterGrade !== 'all' && student.grade !== filterGrade) return false;
+                if (filterClass !== 'all' && student.classNum !== filterClass) return false;
+                
+                if (filterScore !== 'all') {
+                    if (filterScore === 'excellent' && student.score < 90) return false;
+                    if (filterScore === 'good' && (student.score < 80 || student.score >= 90)) return false;
+                    if (filterScore === 'average' && (student.score < 70 || student.score >= 80)) return false;
+                    if (filterScore === 'poor' && student.score >= 70) return false;
+                }
+                
+                return true;
+            });
+            
+            // فرز الطلاب حسب الدرجة (من الأعلى إلى الأقل)
+            filteredStudents.sort((a, b) => b.score - a.score);
+            
+            // تحديث الإحصائيات
+            totalStudentsEl.textContent = filteredStudents.length;
+            
+            if (filteredStudents.length > 0) {
+                const avgScore = Math.round(filteredStudents.reduce((sum, s) => sum + s.score, 0) / filteredStudents.length);
+                avgScoreEl.textContent = avgScore;
+            } else {
+                avgScoreEl.textContent = '0';
+            }
+            
+            // عرض النتائج
+            if (filteredStudents.length === 0) {
+                reportBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 50px;">
+                            <i class="fas fa-info-circle" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                            لا توجد نتائج مطابقة للبحث
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredStudents.forEach((student, index) => {
+                // تحديد فئة الدرجة
+                let scoreClass = '';
+                if (student.score >= 90) scoreClass = 'score-excellent';
+                else if (student.score >= 80) scoreClass = 'score-good';
+                else if (student.score >= 70) scoreClass = 'score-average';
+                else scoreClass = 'score-poor';
+                
+                // تحديد التقييم
+                let evaluation = '';
+                if (student.score >= 90) evaluation = 'ممتاز';
+                else if (student.score >= 80) evaluation = 'جيد جداً';
+                else if (student.score >= 70) evaluation = 'جيد';
+                else evaluation = 'مقبول';
+                
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.grade === 'first' ? 'الأول متوسط' : student.grade === 'second' ? 'الثاني متوسط' : 'الثالث متوسط'}</td>
+                        <td>${student.class}</td>
+                        <td><span class="${scoreClass}">${student.score}</span></td>
+                        <td>${evaluation}</td>
+                    </tr>
+                `;
+            });
+            
+            reportBody.innerHTML = html;
+        }
+        
+        // دالة لتصدير التقرير
+        function exportReport() {
+            const rows = [];
+            const table = document.getElementById('report-table');
+            const headers = [];
+            
+            // جمع عناوين الأعمدة
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push(th.textContent);
+            });
+            
+            rows.push(headers.join(','));
+            
+            // جمع بيانات الصفوف
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    row.push(td.textContent.trim());
+                });
+                rows.push(row.join(','));
+            });
+            
+            // إنشاء ملف CSV
+            const csvContent = rows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `كشف_نهائي_${new Date().toLocaleDateString()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
         
         // تهيئة التطبيق
@@ -1576,6 +2141,11 @@
                     // إظهار محتوى التبويب المحدد
                     const tabId = this.getAttribute('data-tab');
                     document.getElementById(tabId).classList.add('active');
+                    
+                    // إذا كان التبويب هو الكشف النهائي، تحديث البيانات
+                    if (tabId === 'final') {
+                        updateFinalReport();
+                    }
                     
                     // تفريغ حقل البحث وإعادة عرض جميع الطلاب في الفصل النشط
                     searchInput.value = '';
@@ -1657,6 +2227,7 @@
                                     }, 100);
                                     
                                     saveData();
+                                    updateFinalReport();
                                 } else {
                                     alert('الرجاء إدخال اسم الطالب');
                                 }
@@ -1689,6 +2260,13 @@
             // استدعاء دالة إعداد مستمعات الأحداث
             setupAddStudentListeners();
             
+            // إضافة مستمعات الأحداث لفلاتر الكشف النهائي
+            document.getElementById('filter-grade').addEventListener('change', updateFinalReport);
+            document.getElementById('filter-class').addEventListener('change', updateFinalReport);
+            document.getElementById('filter-score').addEventListener('change', updateFinalReport);
+            document.getElementById('refresh-report').addEventListener('click', updateFinalReport);
+            document.getElementById('export-report').addEventListener('click', exportReport);
+            
             // حفظ البيانات عند إغلاق الصفحة
             window.addEventListener('beforeunload', saveData);
             
@@ -1698,9 +2276,9 @@
                 allContainers.forEach(container => {
                     sortStudentsAlphabetically(container.id);
                 });
+                updateFinalReport();
             }, 500);
         });
     </script>
 </body>
 </html>
-
