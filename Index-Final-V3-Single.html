@@ -1,0 +1,2693 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام متابعة السلوك المتكامل للطلاب</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #F3CCAC;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --secondary-dark: #5a0890;
+            --accent-color: #f72585;
+            --success-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --light-gray: #e9ecef;
+            --warning-color: #ff9e00;
+            --danger-color: #e63946;
+            --info-color: #00b4d8;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #D1C2B3 0%, #e4e8f0 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* التصميم المحسن للرأس */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
+        
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            position: relative;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .header-icon {
+            margin-left: 15px;
+            color: var(--success-color);
+        }
+        
+        /* تصميم شريط البحث */
+        .search-container {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 30px;
+            border-top: 5px solid var(--accent-color);
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            color: var(--gray-color);
+            font-size: 1.2rem;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 16px 50px 16px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            background-color: #D9D9D9;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .search-info {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gray-color);
+            font-size: 0.95rem;
+        }
+        
+        /* تصميم التبويبات المحسن */
+        .tabs-container {
+            background: #D1C2B3;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(to right, #f8f9fa, #ffffff);
+            padding: 10px;
+            border-bottom: 2px solid var(--light-gray);
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 15px 35px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 8px;
+            transition: var(--transition);
+            color: var(--gray-color);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-btn i {
+            margin-left: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .tab-btn:hover {
+            color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .tab-btn.active {
+            color: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* تصميم تبويبات الفصول */
+        .class-tabs-container {
+            margin-bottom: 30px;
+        }
+        
+        .class-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .class-tab-btn {
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--gray-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .class-tab-btn i {
+            margin-left: 8px;
+        }
+        
+        .class-tab-btn:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .class-tab-btn.active {
+            color: white;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.2);
+        }
+        
+        .class-tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .class-tab-content.active {
+            display: block;
+        }
+        
+        /* تصميم قسم الإضافة الدفعة الواحدة */
+        .batch-add-section {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 30px;
+            border-right: 6px solid var(--primary-color);
+            transition: var(--transition);
+        }
+        
+        .batch-add-section.collapsed {
+            margin-bottom: 15px;
+            padding: 15px 25px;
+        }
+        
+        .batch-add-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .batch-add-section.collapsed .batch-add-header {
+            margin-bottom: 0;
+        }
+        
+        .batch-add-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .batch-add-title i {
+            margin-left: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .toggle-batch-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-batch-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .batch-add-content {
+            overflow: hidden;
+            transition: var(--transition);
+            max-height: 500px;
+        }
+        
+        .batch-add-section.collapsed .batch-add-content {
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .batch-textarea {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            background-color: white;
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.6;
+            font-family: inherit;
+        }
+        
+        .batch-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .batch-textarea-info {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .batch-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        /* تصميم مربع إضافة الطالب الفردي */
+        .add-student-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 35px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #D1C2B3);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            border-right: 6px solid var(--success-color);
+            transition: var(--transition);
+        }
+        
+        .add-student-section:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .class-select {
+            padding: 16px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            margin-left: 15px;
+            transition: var(--transition);
+            background-color: white;
+            min-width: 150px;
+            cursor: pointer;
+        }
+        
+        .class-select:focus {
+            outline: none;
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+        
+        .student-input {
+            flex-grow: 1;
+            padding: 16px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            margin-left: 15px;
+            transition: var(--transition);
+            background-color: white;
+        }
+        
+        .student-input:focus {
+            outline: none;
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+        
+        /* تصميم أزرار محسن */
+        .add-btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--success-color), #2a9d8f);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(76, 201, 240, 0.3);
+        }
+        
+        .add-btn i {
+            margin-left: 8px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4);
+            background: linear-gradient(135deg, #3ab7e0, #238175);
+        }
+        
+        .batch-add-btn {
+            padding: 16px 35px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(114, 9, 183, 0.3);
+        }
+        
+        .batch-add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(114, 9, 183, 0.4);
+            background: linear-gradient(135deg, var(--secondary-dark), #d0006f);
+        }
+        
+        /* تصميم الطلاب والجداول */
+        .students-container {
+            margin-top: 20px;
+        }
+        
+        .student-item {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            margin-bottom: 35px;
+            overflow: hidden;
+            transition: var(--transition);
+            border-top: 5px solid var(--primary-color);
+        }
+        
+        .student-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .student-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            background: linear-gradient(to right, #f8f9fa, white);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .student-name {
+            font-size: 1.6rem;
+            color: var(--dark-color);
+            font-weight: 700;
+        }
+        
+        .student-class {
+            font-size: 1rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+        }
+        
+        .student-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .student-score {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        /* تصميم الجدول المحسن مع السلوكيات الجديدة */
+        .student-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 10px;
+        }
+        
+        .student-table thead {
+            background: linear-gradient(135deg, #4a4e69, #3a3d5c);
+        }
+        
+        .student-table th {
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .student-table th:first-child {
+            border-top-right-radius: var(--radius-sm);
+        }
+        
+        .student-table th:last-child {
+            border-top-left-radius: var(--radius-sm);
+            border-right: none;
+        }
+        
+        .student-table td {
+            padding: 18px 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .student-table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .student-table tbody tr:nth-child(even) {
+            background-color: #fcfcfc;
+        }
+        
+        .student-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .student-table tbody tr:hover td {
+            transform: scale(1.01);
+        }
+        
+        /* تصميم مربعات الاختيار */
+        .behavior-checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            border-radius: 6px;
+            border: 2px solid var(--light-gray);
+            appearance: none;
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .behavior-checkbox:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+        
+        .behavior-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .behavior-checkbox:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        /* تصميم مربع النص للسلوك الآخر */
+        .other-behavior-input {
+            width: 120px;
+            padding: 8px;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            background-color: white;
+            transition: var(--transition);
+        }
+        
+        .other-behavior-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .other-behavior-input:disabled {
+            background-color: #f5f5f5;
+            opacity: 0.5;
+        }
+        
+        /* تصميم عمود التاريخ */
+        .date-column {
+            font-weight: 600;
+            color: var(--dark-color);
+            min-width: 160px;
+            background-color: rgba(67, 97, 238, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 12px !important;
+        }
+        
+        /* تصميم أزرار الإضافة والحذف */
+        .add-row-btn {
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .add-row-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .delete-row {
+            color: var(--accent-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 0 10px;
+            transition: var(--transition);
+            border-radius: var(--radius-sm);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .delete-row:hover {
+            background-color: rgba(247, 37, 133, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .delete-student {
+            color: white;
+            background: linear-gradient(135deg, #e63946, #d00000);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-size: 1rem;
+            margin-left: 15px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(230, 57, 70, 0.2);
+        }
+        
+        .delete-student i {
+            margin-left: 5px;
+        }
+        
+        .delete-student:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(230, 57, 70, 0.3);
+        }
+        
+        /* رسالة عدم وجود طلاب */
+        .no-students {
+            text-align: center;
+            padding: 60px 30px;
+            color: var(--gray-color);
+            font-style: italic;
+            font-size: 1.2rem;
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-light);
+            border: 2px dashed var(--light-gray);
+        }
+        
+        /* تصميم الكشف النهائي */
+        .final-report-section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-top: 6px solid var(--success-color);
+        }
+        
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .report-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .report-title i {
+            margin-left: 15px;
+            color: var(--success-color);
+        }
+        
+        .report-stats {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .report-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .report-filter-select {
+            padding: 12px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: white;
+            min-width: 200px;
+            cursor: pointer;
+        }
+        
+        .report-filter-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .refresh-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--info-color), var(--primary-color));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 180, 216, 0.3);
+        }
+        
+        .report-table-container {
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .report-table thead {
+            background: linear-gradient(135deg, #4a4e69, #3a3d5c);
+        }
+        
+        .report-table th {
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .report-table th:first-child {
+            border-top-right-radius: var(--radius-sm);
+        }
+        
+        .report-table th:last-child {
+            border-top-left-radius: var(--radius-sm);
+            border-right: none;
+        }
+        
+        .report-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--light-gray);
+            background-color: white;
+        }
+        
+        .report-table tbody tr {
+            transition: var(--transition);
+        }
+        
+        .report-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .report-table tbody tr:nth-child(even) td {
+            background-color: #f8f9fa;
+        }
+        
+        .score-excellent {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-good {
+            background: linear-gradient(135deg, #2196f3, #1e88e5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-average {
+            background: linear-gradient(135deg, #ff9800, #fb8c00);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .score-poor {
+            background: linear-gradient(135deg, #f44336, #e53935);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 60px;
+        }
+        
+        .export-btn {
+            margin-top: 25px;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--success-color), #2a9d8f);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(76, 201, 240, 0.4);
+        }
+        
+        /* تصميم نتائج البحث */
+        .search-highlight {
+            background-color: rgba(255, 255, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        
+        .search-result-info {
+            background: linear-gradient(135deg, #ffd166, #ffb347);
+            color: var(--dark-color);
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+        }
+        
+        /* تصميم الفوتر */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: var(--gray-color);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer p {
+            margin-bottom: 10px;
+        }
+        
+        /* تصميم متجاوب */
+        @media (max-width: 992px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                margin-bottom: 5px;
+            }
+            
+            .add-student-section, .batch-buttons, .report-header, .report-filters {
+                flex-wrap: wrap;
+            }
+            
+            .class-select, .student-input, .batch-textarea, .report-filter-select {
+                margin-bottom: 15px;
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .add-btn, .batch-add-btn, .refresh-btn, .export-btn {
+                width: 100%;
+            }
+            
+            .report-stats {
+                flex-direction: column;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .student-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .student-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .student-table {
+                font-size: 0.9rem;
+            }
+            
+            .student-table th, .student-table td {
+                padding: 12px 8px;
+            }
+            
+            .class-tabs {
+                justify-content: flex-start;
+            }
+            
+            .batch-add-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toggle-batch-btn {
+                margin-top: 10px;
+                align-self: flex-start;
+            }
+            
+            .other-behavior-input {
+                width: 80px;
+            }
+        }
+    
+        /* أزرار الاختبارات والكشف الجديدة */
+        .student-actions {
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .btn-short-tests, .btn-behavior-report {
+            border:none;
+            padding:8px 14px;
+            border-radius:20px;
+            font-size:0.85rem;
+            font-weight:bold;
+            cursor:pointer;
+            color:white;
+            display:flex;
+            align-items:center;
+            gap:6px;
+            transition:all 0.2s;
+        }
+        .btn-short-tests { background: linear-gradient(135deg,#8b5cf6,#6366f1); }
+        .btn-behavior-report { background: linear-gradient(135deg,#06b6d4,#0ea5e9); }
+        .btn-short-tests:hover, .btn-behavior-report:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+
+        /* مودال الاختبارات والكشف */
+        .modal-overlay {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+            display:none; align-items:center; justify-content:center;
+            z-index:9999; padding:20px;
+        }
+        .modal-overlay.active { display:flex; }
+        .modal-box {
+            background:white; width:100%; max-width:650px; max-height:90vh;
+            border-radius:18px; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.3);
+            display:flex; flex-direction:column; animation:modalPop 0.3s ease;
+        }
+        @keyframes modalPop { from{opacity:0; transform:scale(0.9) translateY(20px);} to{opacity:1; transform:scale(1) translateY(0);} }
+        .modal-header {
+            padding:20px 25px; background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));
+            color:white; display:flex; justify-content:space-between; align-items:center;
+        }
+        .modal-header h3 { margin:0; font-size:1.3rem; }
+        .modal-close { background:rgba(255,255,255,0.2); border:none; color:white; width:36px; height:36px; border-radius:50%; cursor:pointer; font-size:1.2rem; }
+        .modal-body { padding:20px 25px; overflow-y:auto; flex:1; }
+        .modal-footer { padding:15px 25px; background:#f8f9fa; border-top:1px solid #e9ecef; display:flex; justify-content:flex-end; gap:10px; }
+
+        .short-test-row {
+            display:flex; gap:12px; align-items:center; padding:12px; background:#f8f9fa;
+            border-radius:12px; margin-bottom:10px; border:1px solid #e9ecef;
+        }
+        .short-test-row .date-label { min-width:160px; font-weight:600; background:white; padding:8px 12px; border-radius:8px; border:1px solid #e9ecef; }
+        .short-test-row .grade-input {
+            width:90px; padding:8px 12px; border-radius:8px; border:2px solid #e9ecef; text-align:center; font-weight:bold;
+        }
+        .short-test-row .grade-input:focus { border-color:#8b5cf6; outline:none; }
+        .short-test-row .delete-test { background:#ffe0e0; color:#e63946; border:none; width:36px; height:36px; border-radius:50%; cursor:pointer; }
+        
+        .report-summary {
+            background:linear-gradient(135deg,#f0f9ff,#e0f2fe); padding:15px; border-radius:12px; margin-bottom:15px; border-right:4px solid #0ea5e9;
+        }
+        .report-table { width:100%; border-collapse:collapse; margin-top:10px; }
+        .report-table th, .report-table td { padding:10px; text-align:center; border-bottom:1px solid #e9ecef; }
+        .report-table th { background:#f1f5f9; font-weight:bold; }
+        .badge-neg { background:#fee2e2; color:#dc2626; padding:4px 10px; border-radius:20px; font-weight:bold; font-size:0.85rem; }
+        .badge-pos { background:#dcfce7; color:#16a34a; padding:4px 10px; border-radius:20px; font-weight:bold; }
+
+
+</style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-graduate header-icon"></i> نظام متابعة السلوك المتكامل للطلاب</h1>
+            <p>نظام متكامل لمتابعة وتقييم سلوك الطلاب مع إمكانية إضافة سلوكيات متنوعة وكشف نهائي للدرجات</p>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="search-input" placeholder="ابحث عن طالب بإدخال حرف أو اسم...">
+            </div>
+            <div class="search-info">ابحث عن أي طالب بأي حرف من اسمه - البحث ديناميكي يعرض جميع النتائج</div>
+            <div id="search-results-info" class="search-result-info" style="display: none;"></div>
+        </div>
+        
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="first">
+                    <i class="fas fa-user-graduate"></i> الأول متوسط
+                </button>
+                <button class="tab-btn" data-tab="second">
+                    <i class="fas fa-user-graduate"></i> الثاني متوسط
+                </button>
+                <button class="tab-btn" data-tab="third">
+                    <i class="fas fa-graduation-cap"></i> الثالث متوسط
+                </button>
+                <button class="tab-btn" data-tab="final">
+                    <i class="fas fa-file-alt"></i> الكشف النهائي
+                </button>
+            </div>
+            
+            <!-- تبويب الأول متوسط -->
+            <div id="first" class="tab-content active">
+                <div class="batch-add-section" id="batch-add-first">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الأول متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-first">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-first" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-first">
+                                <option value="first-1">أول ١</option>
+                                <option value="first-2">أول ٢</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-first">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-tabs-container">
+                    <div class="class-tabs">
+                        <button class="class-tab-btn active" data-class="first-1">
+                            <i class="fas fa-chalkboard-teacher"></i> أول ١
+                        </button>
+                        <button class="class-tab-btn" data-class="first-2">
+                            <i class="fas fa-chalkboard-teacher"></i> أول ٢
+                        </button>
+                    </div>
+                    
+                    <!-- محتوى الفصل أول ١ -->
+                    <div id="first-1" class="class-tab-content active">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-first-1">
+                                <option value="first-1" selected>أول ١</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-first-1">
+                            <button class="add-btn" id="add-student-first-1">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-first-1" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- محتوى الفصل أول ٢ -->
+                    <div id="first-2" class="class-tab-content">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-first-2">
+                                <option value="first-2" selected>أول ٢</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-first-2">
+                            <button class="add-btn" id="add-student-first-2">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-first-2" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- تبويب الثاني متوسط -->
+            <div id="second" class="tab-content">
+                <div class="batch-add-section" id="batch-add-second">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الثاني متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-second">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-second" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-second">
+                                <option value="second-1">ثاني ١</option>
+                                <option value="second-2">ثاني ٢</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-second">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-tabs-container">
+                    <div class="class-tabs">
+                        <button class="class-tab-btn active" data-class="second-1">
+                            <i class="fas fa-chalkboard-teacher"></i> ثاني ١
+                        </button>
+                        <button class="class-tab-btn" data-class="second-2">
+                            <i class="fas fa-chalkboard-teacher"></i> ثاني ٢
+                        </button>
+                    </div>
+                    
+                    <!-- محتوى الفصل ثاني ١ -->
+                    <div id="second-1" class="class-tab-content active">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-second-1">
+                                <option value="second-1" selected>ثاني ١</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-second-1">
+                            <button class="add-btn" id="add-student-second-1">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-second-1" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- محتوى الفصل ثاني ٢ -->
+                    <div id="second-2" class="class-tab-content">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-second-2">
+                                <option value="second-2" selected>ثاني ٢</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-second-2">
+                            <button class="add-btn" id="add-student-second-2">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-second-2" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- تبويب الثالث متوسط -->
+            <div id="third" class="tab-content">
+                <div class="batch-add-section" id="batch-add-third">
+                    <div class="batch-add-header">
+                        <div class="batch-add-title">
+                            <i class="fas fa-users"></i> إضافة طلاب دفعة واحدة للصف الثالث متوسط
+                        </div>
+                        <button class="toggle-batch-btn" id="toggle-batch-third">
+                            <i class="fas fa-eye-slash"></i> إخفاء
+                        </button>
+                    </div>
+                    <div class="batch-add-content">
+                        <textarea class="batch-textarea" id="batch-text-third" placeholder="أدخل أسماء الطلاب دفعة واحدة، كل اسم في سطر جديد. مثال:
+أحمد محمد
+محمد علي
+عبدالله سعيد"></textarea>
+                        <div class="batch-textarea-info">
+                            أدخل أسماء الطلاب، كل اسم في سطر جديد. سيتم إضافة جميع الأسماء دفعة واحدة إلى الفصل المحدد.
+                        </div>
+                        <div class="batch-buttons">
+                            <select class="class-select" id="batch-class-select-third">
+                                <option value="third-1">ثالث ١</option>
+                                <option value="third-2">ثالث ٢</option>
+                                <option value="third-3">ثالث ٣</option>
+                            </select>
+                            <button class="batch-add-btn" id="batch-add-btn-third">
+                                <i class="fas fa-user-plus"></i> إضافة الطلاب دفعة واحدة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-tabs-container">
+                    <div class="class-tabs">
+                        <button class="class-tab-btn active" data-class="third-1">
+                            <i class="fas fa-chalkboard-teacher"></i> ثالث ١
+                        </button>
+                        <button class="class-tab-btn" data-class="third-2">
+                            <i class="fas fa-chalkboard-teacher"></i> ثالث ٢
+                        </button>
+                        <button class="class-tab-btn" data-class="third-3">
+                            <i class="fas fa-chalkboard-teacher"></i> ثالث ٣
+                        </button>
+                    </div>
+                    
+                    <!-- محتوى الفصل ثالث ١ -->
+                    <div id="third-1" class="class-tab-content active">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-third-1">
+                                <option value="third-1" selected>ثالث ١</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-third-1">
+                            <button class="add-btn" id="add-student-third-1">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-third-1" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- محتوى الفصل ثالث ٢ -->
+                    <div id="third-2" class="class-tab-content">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-third-2">
+                                <option value="third-2" selected>ثالث ٢</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-third-2">
+                            <button class="add-btn" id="add-student-third-2">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-third-2" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- محتوى الفصل ثالث ٣ -->
+                    <div id="third-3" class="class-tab-content">
+                        <div class="add-student-section">
+                            <select class="class-select" id="class-select-third-3">
+                                <option value="third-3" selected>ثالث ٣</option>
+                            </select>
+                            <input type="text" class="student-input" placeholder="أدخل اسم الطالب هنا..." id="student-name-third-3">
+                            <button class="add-btn" id="add-student-third-3">
+                                <i class="fas fa-plus-circle"></i> إضافة طالب جديد
+                            </button>
+                        </div>
+                        <div id="students-container-third-3" class="students-container">
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- تبويب الكشف النهائي -->
+            <div id="final" class="tab-content">
+                <div class="final-report-section">
+                    <div class="report-header">
+                        <div class="report-title">
+                            <i class="fas fa-file-alt"></i> الكشف النهائي للطلاب
+                        </div>
+                        <div class="report-stats">
+                            <div class="stat-box">
+                                <div class="stat-number" id="total-students">0</div>
+                                <div class="stat-label">إجمالي الطلاب</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-number" id="avg-score">0</div>
+                                <div class="stat-label">متوسط الدرجات</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="report-filters">
+                        <select class="report-filter-select" id="filter-grade">
+                            <option value="all">جميع الصفوف</option>
+                            <option value="first">الأول متوسط</option>
+                            <option value="second">الثاني متوسط</option>
+                            <option value="third">الثالث متوسط</option>
+                        </select>
+                        
+                        <select class="report-filter-select" id="filter-class">
+                            <option value="all">جميع الفصول</option>
+                            <option value="first-1">أول ١</option>
+                            <option value="first-2">أول ٢</option>
+                            <option value="second-1">ثاني ١</option>
+                            <option value="second-2">ثاني ٢</option>
+                            <option value="third-1">ثالث ١</option>
+                            <option value="third-2">ثالث ٢</option>
+                            <option value="third-3">ثالث ٣</option>
+                        </select>
+                        
+                        <select class="report-filter-select" id="filter-score">
+                            <option value="all">جميع الدرجات</option>
+                            <option value="excellent">ممتاز (90-100)</option>
+                            <option value="good">جيد جداً (80-89)</option>
+                            <option value="average">جيد (70-79)</option>
+                            <option value="poor">مقبول (أقل من 70)</option>
+                        </select>
+                        
+                        <button class="refresh-btn" id="refresh-report">
+                            <i class="fas fa-sync-alt"></i> تحديث النتائج
+                        </button>
+                    </div>
+                    
+                    <div class="report-table-container">
+                        <table class="report-table" id="report-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الطالب</th>
+                                    <th>الصف</th>
+                                    <th>الفصل</th>
+                                    <th>الدرجة</th>
+                                    <th>التقييم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-table-body">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 50px;">
+                                        <i class="fas fa-info-circle" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                                        لا توجد بيانات لعرضها
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button class="export-btn" id="export-report">
+                        <i class="fas fa-download"></i> تصدير التقرير
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>جميع البيانات محفوظة تلقائياً في متصفحك. يمكنك العودة في أي وقت لمتابعة سلوك الطلاب.</p>
+            <p><i class="fas fa-graduation-cap"></i> نظام متابعة السلوك المتكامل للطلاب - إصدار 5.0 © 2023</p>
+        </div>
+    </div>
+
+    <script>
+        // تعريف هيكل الفصول الدراسية
+        const classesStructure = {
+            'first': ['أول ١', 'أول ٢'],
+            'second': ['ثاني ١', 'ثاني ٢'],
+            'third': ['ثالث ١', 'ثالث ٢', 'ثالث ٣']
+        };
+        
+        // تعريف قائمة السلوكيات
+        const behaviors = [
+            { id: 'talked', name: 'تحدث' },
+            { id: 'forgotBook', name: 'نسي الكتاب' },
+            { id: 'late', name: 'متأخر' },
+            { id: 'forgotPen', name: 'نسي القلم' },
+            { id: 'sleeping', name: 'نائم' },
+            { id: 'other', name: 'أخرى' }
+        ];
+        
+        // دالة للحصول على التاريخ الهجري
+        function getHijriDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
+            const hijriDate = new Intl.DateTimeFormat('ar-SA-u-ca-islamic', options).format(now);
+            return hijriDate;
+        }
+        
+        // دالة لتوليد معرف فريد
+        function generateId() {
+            return 'id-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // دالة لتسليط الضوء على نتائج البحث
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+        
+        // دالة لفرز الطلاب أبجدياً
+        function sortStudentsAlphabetically(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const studentItems = Array.from(container.querySelectorAll('.student-item'));
+            
+            if (studentItems.length <= 1) return;
+            
+            studentItems.sort((a, b) => {
+                const nameA = a.querySelector('.student-name span').textContent.trim();
+                const nameB = b.querySelector('.student-name span').textContent.trim();
+                return nameA.localeCompare(nameB, 'ar');
+            });
+            
+            // إعادة ترتيب العناصر في الحاوية
+            studentItems.forEach(item => {
+                container.appendChild(item);
+            });
+        }
+        
+        // دالة لتطبيع النص العربي (لتحسين البحث)
+        function normalizeArabicText(text) {
+            return text
+                .replace(/[أإآ]/g, 'ا')
+                .replace(/[ة]/g, 'ه')
+                .replace(/[يى]/g, 'ي')
+                .replace(/[ؤ]/g, 'و')
+                .replace(/[ئ]/g, 'ي')
+                .toLowerCase();
+        }
+        
+        // دالة محسنة للبحث عن الطلاب
+        function searchStudents(searchTerm) {
+            const resultsInfo = document.getElementById('search-results-info');
+            
+            // إخفاء جميع الطلاب أولاً
+            document.querySelectorAll('.student-item').forEach(student => {
+                student.style.display = 'none';
+            });
+            
+            // إخفاء رسائل عدم وجود طلاب
+            document.querySelectorAll('.no-students').forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            if (!searchTerm.trim()) {
+                // إذا كان البحث فارغاً، إظهار جميع الطلاب في الفصول النشطة فقط
+                document.querySelectorAll('.class-tab-content.active .student-item').forEach(student => {
+                    student.style.display = 'block';
+                });
+                
+                // إظهار رسائل عدم وجود طلاب في الفصول الفارغة النشطة فقط
+                document.querySelectorAll('.class-tab-content.active .students-container').forEach(container => {
+                    if (container.querySelectorAll('.student-item').length === 0) {
+                        const noStudentsMsg = container.querySelector('.no-students');
+                        if (noStudentsMsg) noStudentsMsg.style.display = 'block';
+                    }
+                });
+                
+                resultsInfo.style.display = 'none';
+                return;
+            }
+            
+            // البحث عن الطلاب الذين تتطابق أسماؤهم مع مصطلح البحث
+            let foundCount = 0;
+            const searchTermLower = searchTerm.toLowerCase();
+            
+            document.querySelectorAll('.student-name span').forEach(nameElement => {
+                const studentName = nameElement.textContent;
+                const studentItem = nameElement.closest('.student-item');
+                
+                // البحث باستخدام includes مع تحويل للنص العربي
+                if (studentName.toLowerCase().includes(searchTermLower) || 
+                    normalizeArabicText(studentName).includes(normalizeArabicText(searchTerm))) {
+                    
+                    studentItem.style.display = 'block';
+                    
+                    // تسليط الضوء على النص المطابق
+                    const highlightedName = highlightText(studentName, searchTerm);
+                    nameElement.innerHTML = highlightedName;
+                    
+                    foundCount++;
+                } else {
+                    studentItem.style.display = 'none';
+                }
+            });
+            
+            // عرض نتائج البحث
+            if (foundCount > 0) {
+                resultsInfo.innerHTML = `تم العثور على ${foundCount} طالب يحتوي اسمه على "${searchTerm}"`;
+                resultsInfo.style.display = 'block';
+            } else {
+                resultsInfo.innerHTML = `لا توجد نتائج للبحث عن "${searchTerm}"`;
+                resultsInfo.style.display = 'block';
+            }
+        }
+        
+        // دالة لحساب عدد المربعات المحددة في صف معين
+        function countCheckedBehaviors(row) {
+            const checkboxes = row.querySelectorAll('.behavior-checkbox:checked');
+            const otherInput = row.querySelector('.other-behavior-input');
+            
+            // إذا كان مربع "أخرى" محدداً، نضيف 1 للنقاط
+            const otherChecked = row.querySelector('.other-checkbox')?.checked || false;
+            
+            return checkboxes.length + (otherChecked ? 1 : 0);
+        }
+        
+        // دالة لتحديث النتيجة عند تغيير مربعات الاختيار
+                function countCheckedBehaviors(row){
+            if(!row) return 0;
+            let c=0;
+            if(row.querySelector('.talked-checkbox')?.checked) c++;
+            if(row.querySelector('.forgot-book-checkbox')?.checked) c++;
+            if(row.querySelector('.late-checkbox')?.checked) c++;
+            if(row.querySelector('.forgot-pen-checkbox')?.checked) c++;
+            if(row.querySelector('.sleeping-checkbox')?.checked) c++;
+            if(row.querySelector('.other-checkbox')?.checked) c++;
+            return c;
+        }
+
+        function recalculateScore(studentId){
+            const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
+            if(!studentItem) return 100;
+            const scoreElement = studentItem.querySelector('.student-score');
+            const allRows = studentItem.querySelectorAll('tbody tr');
+            let totalDeductions = 0;
+            allRows.forEach(r => {
+                totalDeductions += countCheckedBehaviors(r) * 2;
+            });
+            // خصم الاختبارات القصيرة
+            let shortTests = [];
+            try{ shortTests = JSON.parse(studentItem.dataset.shortTests || '[]'); }catch(e){}
+            shortTests.forEach(t=>{
+                let g = parseInt(t.grade);
+                if(!isNaN(g)){
+                    // إذا أدخل -4 نخصم 4، إذا أدخل 4 نخصم 4 أيضاً
+                    totalDeductions += Math.abs(g);
+                }
+            });
+            const newScore = Math.min(100, Math.max(0, 100 - totalDeductions));
+            scoreElement.textContent = newScore;
+            return newScore;
+        }
+
+        function updateScore(row, studentItem) {
+            const studentId = studentItem.dataset.id;
+            return recalculateScore(studentId);
+        }
+
+        
+        // دالة لإضافة طلاب دفعة واحدة
+        function addStudentsBatch(grade, classId) {
+            const textareaId = `batch-text-${grade}`;
+            const textarea = document.getElementById(textareaId);
+            const namesText = textarea.value.trim();
+            
+            if (!namesText) {
+                alert('الرجاء إدخال أسماء الطلاب');
+                return;
+            }
+            
+            // تقسيم النص إلى أسطر وإزالة الأسطر الفارغة
+            const names = namesText.split('\n')
+                .map(name => name.trim())
+                .filter(name => name.length > 0);
+            
+            if (names.length === 0) {
+                alert('الرجاء إدخال أسماء صحيحة');
+                return;
+            }
+            
+            // الحصول على اسم الفصل
+            const className = classesStructure[grade][parseInt(classId.split('-')[1]) - 1];
+            
+            // إضافة كل اسم
+            let addedCount = 0;
+            names.forEach(name => {
+                if (name && name.trim().length > 0) {
+                    addStudentToDOM(classId, name.trim(), className);
+                    addedCount++;
+                }
+            });
+            
+            // إفراغ مربع النص بعد الإضافة
+            textarea.value = '';
+            
+            // فرز الطلاب أبجدياً بعد الإضافة
+            setTimeout(() => {
+                sortStudentsAlphabetically(`students-container-${classId}`);
+            }, 100);
+            
+            // حفظ البيانات
+            saveData();
+            
+            // تحديث الكشف النهائي إذا كان نشطاً
+            updateFinalReport();
+            
+            // إظهار رسالة نجاح
+            alert(`تم إضافة ${addedCount} طالب بنجاح إلى الفصل ${className}`);
+        }
+        
+        // دالة لحفظ البيانات في localStorage
+        function saveData() {
+            const data = {};
+            
+            // جمع بيانات الطلاب من كل فصل
+            const classContainers = document.querySelectorAll('[id^="students-container-"]');
+            
+            classContainers.forEach(container => {
+                const classId = container.id.replace('students-container-', '');
+                const students = container.querySelectorAll('.student-item');
+                const studentsData = [];
+                
+                students.forEach(student => {
+                    const studentName = student.querySelector('.student-name span').textContent;
+                    const studentId = student.dataset.id;
+                    const score = student.querySelector('.student-score').textContent;
+                    const studentClass = student.querySelector('.student-class').textContent;
+                    let shortTests = [];
+                    try{ shortTests = JSON.parse(student.dataset.shortTests || '[]'); }catch(e){ shortTests = []; }
+                    
+                    const studentData = {
+                        id: studentId,
+                        name: studentName,
+                        class: studentClass,
+                        score: parseInt(score),
+                        rows: [],
+                        shortTests: shortTests
+                    };
+                    
+                    // جمع بيانات الصفوف
+                    const rows = student.querySelectorAll('tbody tr');
+                    rows.forEach(row => {
+                        const rowData = {
+                            date: row.querySelector('.date-column').textContent,
+                            behaviors: {
+                                talked: row.querySelector('.talked-checkbox')?.checked || false,
+                                forgotBook: row.querySelector('.forgot-book-checkbox')?.checked || false,
+                                late: row.querySelector('.late-checkbox')?.checked || false,
+                                forgotPen: row.querySelector('.forgot-pen-checkbox')?.checked || false,
+                                sleeping: row.querySelector('.sleeping-checkbox')?.checked || false,
+                                other: row.querySelector('.other-checkbox')?.checked || false,
+                                otherText: row.querySelector('.other-behavior-input')?.value || ''
+                            }
+                        };
+                        studentData.rows.push(rowData);
+                    });
+                    
+                    studentsData.push(studentData);
+                });
+                
+                data[classId] = studentsData;
+            });
+            
+            localStorage.setItem('studentBehaviorData', JSON.stringify(data));
+        }
+
+        
+        // دالة لتحميل البيانات من localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('studentBehaviorData');
+            if (!savedData) return;
+            
+            const data = JSON.parse(savedData);
+            
+            // تحميل بيانات كل فصل
+            for (const classId in data) {
+                if (data[classId] && data[classId].length > 0) {
+                    const container = document.getElementById(`students-container-${classId}`);
+                    if (container) {
+                        container.innerHTML = '';
+                        
+                        // فرز الطلاب أبجدياً قبل إضافتهم
+                        const sortedStudents = data[classId].sort((a, b) => {
+                            return a.name.localeCompare(b.name, 'ar');
+                        });
+                        
+                        sortedStudents.forEach(studentData => {
+                            addStudentToDOM(classId, studentData.name, studentData.class, studentData.id, studentData.score, studentData.rows, studentData.shortTests || []);
+                        });
+                    }
+                }
+            }
+            
+            // تحديث الكشف النهائي
+            setTimeout(() => {
+                updateFinalReport();
+            }, 500);
+        }
+
+        
+        // دالة لإضافة طالب إلى DOM
+        function addStudentToDOM(classId, studentName, studentClass, studentId = null, initialScore = 100, rows = [], shortTests = []) {
+            const container = document.getElementById(`students-container-${classId}`);
+            const noStudentsMsg = container.querySelector('.no-students');
+            
+            if (noStudentsMsg) {
+                noStudentsMsg.remove();
+            }
+            
+            if (!studentId) {
+                studentId = generateId();
+            }
+            
+            // إنشاء عنصر الطالب
+            const studentItem = document.createElement('div');
+            studentItem.className = 'student-item';
+            studentItem.dataset.id = studentId;
+            studentItem.dataset.shortTests = JSON.stringify(shortTests || []);
+            
+            // إنشاء HTML للطالب مع الزرين الجديدين
+            studentItem.innerHTML = `
+                <div class="student-header">
+                    <div class="student-info">
+                        <div class="student-name"><span>${studentName}</span></div>
+                        <div class="student-class">${studentClass}</div>
+                    </div>
+                    <div class="student-actions">
+                        <button class="btn-short-tests" title="الاختبارات القصيرة">
+                            <i class="fas fa-clipboard-check"></i> الاختبارات القصيرة
+                        </button>
+                        <button class="btn-behavior-report" title="كشف السلوك">
+                            <i class="fas fa-file-alt"></i> كشف السلوك
+                        </button>
+                        <button class="delete-student" title="حذف الطالب">
+                            <i class="fas fa-trash-alt"></i> حذف الطالب
+                        </button>
+                        <span class="student-score">${initialScore}</span>
+                    </div>
+                </div>
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>التاريخ</th>
+                            <th>تحدث</th>
+                            <th>نسي الكتاب</th>
+                            <th>متأخر</th>
+                            <th>نسي القلم</th>
+                            <th>نائم</th>
+                            <th>أخرى</th>
+                            <th>وصف أخرى</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-${studentId}">
+                        <!-- سيتم إضافة الصفوف هنا -->
+                    </tbody>
+                </table>
+                <button class="add-row-btn" data-student-id="${studentId}">
+                    <i class="fas fa-plus"></i>
+                </button>
+            `;
+            
+            container.appendChild(studentItem);
+            
+            // إضافة الصفوف الموجودة مسبقاً (عند التحميل)
+            const tbody = studentItem.querySelector(`#tbody-${studentId}`);
+            if (rows.length > 0) {
+                rows.forEach(rowData => {
+                    addRowToStudent(studentId, rowData.date, rowData.behaviors);
+                });
+            } else {
+                // إضافة صف جديد فارغ
+                addRowToStudent(studentId);
+            }
+            
+            // إضافة مستمع حدث لحذف الطالب
+            studentItem.querySelector('.delete-student').addEventListener('click', function() {
+                if (confirm(`هل أنت متأكد من حذف الطالب ${studentName}؟ سيتم حذف جميع بياناته.`)) {
+                    studentItem.remove();
+                    
+                    // إظهار رسالة عدم وجود طلاب إذا كان الحاوية فارغة
+                    if (container.children.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-students">
+                                <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 20px; display: block; color: #ccc;"></i>
+                                لا يوجد طلاب مسجلين في هذا الفصل بعد. ابدأ بإضافة أول طالب.
+                            </div>
+                        `;
+                    }
+                    
+                    saveData();
+                    updateFinalReport();
+                }
+            });
+            
+            // إضافة مستمع حدث لزر إضافة الصف
+            studentItem.querySelector('.add-row-btn').addEventListener('click', function() {
+                addRowToStudent(studentId);
+                saveData();
+                updateFinalReport();
+            });
+
+            // أزرار الاختبارات القصيرة وكشف السلوك
+            studentItem.querySelector('.btn-short-tests').addEventListener('click', function(){
+                openShortTestsModal(studentId);
+            });
+            studentItem.querySelector('.btn-behavior-report').addEventListener('click', function(){
+                openBehaviorReportModal(studentId);
+            });
+            
+            // حساب الدرجة الأولية مع الاختبارات
+            setTimeout(()=>{ recalculateScore(studentId); }, 50);
+            
+            return studentId;
+        }
+        
+        // دالة لإضافة صف إلى جدول الطالب
+        function addRowToStudent(studentId, date = null, behaviors = null) {
+            const tbody = document.getElementById(`tbody-${studentId}`);
+            const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
+            const scoreElement = studentItem.querySelector('.student-score');
+            
+            // استخدام التاريخ المقدم أو توليد تاريخ جديد
+            const rowDate = date || `${getHijriDate()}`;
+            
+            // إنشاء صف جديد
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="date-column">${rowDate}</td>
+                <td><input type="checkbox" class="behavior-checkbox talked-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox forgot-book-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox late-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox forgot-pen-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox sleeping-checkbox"></td>
+                <td><input type="checkbox" class="behavior-checkbox other-checkbox"></td>
+                <td><input type="text" class="other-behavior-input" placeholder="وصف السلوك" disabled></td>
+                <td><button class="delete-row" title="حذف الصف"><i class="fas fa-trash-alt"></i></button></td>
+            `;
+            
+            tbody.appendChild(row);
+            
+            // تعيين حالة مربعات الاختيار إذا كانت موجودة
+            if (behaviors) {
+                row.querySelector('.talked-checkbox').checked = behaviors.talked || false;
+                row.querySelector('.forgot-book-checkbox').checked = behaviors.forgotBook || false;
+                row.querySelector('.late-checkbox').checked = behaviors.late || false;
+                row.querySelector('.forgot-pen-checkbox').checked = behaviors.forgotPen || false;
+                row.querySelector('.sleeping-checkbox').checked = behaviors.sleeping || false;
+                row.querySelector('.other-checkbox').checked = behaviors.other || false;
+                
+                const otherInput = row.querySelector('.other-behavior-input');
+                otherInput.value = behaviors.otherText || '';
+                otherInput.disabled = !behaviors.other;
+            }
+            
+            // تحديث النتيجة الأولية
+            updateScore(row, studentItem);
+            
+            // إضافة مستمعات الأحداث لمربعات الاختيار
+            const checkboxes = row.querySelectorAll('.behavior-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // تفعيل/تعطيل مربع النص للسلوك "أخرى"
+                    if (checkbox.classList.contains('other-checkbox')) {
+                        const otherInput = row.querySelector('.other-behavior-input');
+                        otherInput.disabled = !checkbox.checked;
+                        if (!checkbox.checked) {
+                            otherInput.value = '';
+                        }
+                    }
+                    
+                    updateScore(row, studentItem);
+                    saveData();
+                    updateFinalReport();
+                });
+            });
+            
+            // إضافة مستمع حدث لمربع النص للسلوك "أخرى"
+            const otherInput = row.querySelector('.other-behavior-input');
+            otherInput.addEventListener('input', function() {
+                saveData();
+            });
+            
+            // إضافة مستمع حدث لحذف الصف
+            row.querySelector('.delete-row').addEventListener('click', function() {
+                row.remove();
+                
+                // إعادة حساب النتيجة بعد حذف الصف
+                const allRows = studentItem.querySelectorAll('tbody tr');
+                let totalDeductions = 0;
+                
+                allRows.forEach(r => {
+                    totalDeductions += countCheckedBehaviors(r) * 2;
+                });
+                
+                const newScore = Math.min(100, Math.max(0, 100 - totalDeductions));
+                scoreElement.textContent = newScore;
+                
+                saveData();
+                updateFinalReport();
+            });
+        }
+        
+        // دالة لتحديث الكشف النهائي
+        function updateFinalReport() {
+            const filterGrade = document.getElementById('filter-grade').value;
+            const filterClass = document.getElementById('filter-class').value;
+            const filterScore = document.getElementById('filter-score').value;
+            
+            const reportBody = document.getElementById('report-table-body');
+            const totalStudentsEl = document.getElementById('total-students');
+            const avgScoreEl = document.getElementById('avg-score');
+            
+            // جمع جميع الطلاب
+            const allStudents = [];
+            document.querySelectorAll('.student-item').forEach(student => {
+                const name = student.querySelector('.student-name span').textContent;
+                const classElement = student.querySelector('.student-class').textContent;
+                const score = parseInt(student.querySelector('.student-score').textContent);
+                
+                // تحديد الصف والفصل
+                let grade = '';
+                let classNum = '';
+                
+                if (classElement.includes('أول')) {
+                    grade = 'first';
+                    classNum = classElement.includes('١') ? 'first-1' : 'first-2';
+                } else if (classElement.includes('ثاني')) {
+                    grade = 'second';
+                    classNum = classElement.includes('١') ? 'second-1' : 'second-2';
+                } else if (classElement.includes('ثالث')) {
+                    grade = 'third';
+                    if (classElement.includes('١')) classNum = 'third-1';
+                    else if (classElement.includes('٢')) classNum = 'third-2';
+                    else if (classElement.includes('٣')) classNum = 'third-3';
+                }
+                
+                allStudents.push({
+                    name,
+                    class: classElement,
+                    grade,
+                    classNum,
+                    score
+                });
+            });
+            
+            // تطبيق الفلاتر
+            let filteredStudents = allStudents.filter(student => {
+                if (filterGrade !== 'all' && student.grade !== filterGrade) return false;
+                if (filterClass !== 'all' && student.classNum !== filterClass) return false;
+                
+                if (filterScore !== 'all') {
+                    if (filterScore === 'excellent' && student.score < 90) return false;
+                    if (filterScore === 'good' && (student.score < 80 || student.score >= 90)) return false;
+                    if (filterScore === 'average' && (student.score < 70 || student.score >= 80)) return false;
+                    if (filterScore === 'poor' && student.score >= 70) return false;
+                }
+                
+                return true;
+            });
+            
+            // فرز الطلاب حسب الدرجة (من الأعلى إلى الأقل)
+            filteredStudents.sort((a, b) => b.score - a.score);
+            
+            // تحديث الإحصائيات
+            totalStudentsEl.textContent = filteredStudents.length;
+            
+            if (filteredStudents.length > 0) {
+                const avgScore = Math.round(filteredStudents.reduce((sum, s) => sum + s.score, 0) / filteredStudents.length);
+                avgScoreEl.textContent = avgScore;
+            } else {
+                avgScoreEl.textContent = '0';
+            }
+            
+            // عرض النتائج
+            if (filteredStudents.length === 0) {
+                reportBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 50px;">
+                            <i class="fas fa-info-circle" style="font-size: 2rem; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                            لا توجد نتائج مطابقة للبحث
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredStudents.forEach((student, index) => {
+                // تحديد فئة الدرجة
+                let scoreClass = '';
+                if (student.score >= 90) scoreClass = 'score-excellent';
+                else if (student.score >= 80) scoreClass = 'score-good';
+                else if (student.score >= 70) scoreClass = 'score-average';
+                else scoreClass = 'score-poor';
+                
+                // تحديد التقييم
+                let evaluation = '';
+                if (student.score >= 90) evaluation = 'ممتاز';
+                else if (student.score >= 80) evaluation = 'جيد جداً';
+                else if (student.score >= 70) evaluation = 'جيد';
+                else evaluation = 'مقبول';
+                
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${student.name}</td>
+                        <td>${student.grade === 'first' ? 'الأول متوسط' : student.grade === 'second' ? 'الثاني متوسط' : 'الثالث متوسط'}</td>
+                        <td>${student.class}</td>
+                        <td><span class="${scoreClass}">${student.score}</span></td>
+                        <td>${evaluation}</td>
+                    </tr>
+                `;
+            });
+            
+            reportBody.innerHTML = html;
+        }
+        
+        // دالة لتصدير التقرير
+        function exportReport() {
+            const rows = [];
+            const table = document.getElementById('report-table');
+            const headers = [];
+            
+            // جمع عناوين الأعمدة
+            table.querySelectorAll('thead th').forEach(th => {
+                headers.push(th.textContent);
+            });
+            
+            rows.push(headers.join(','));
+            
+            // جمع بيانات الصفوف
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const row = [];
+                tr.querySelectorAll('td').forEach(td => {
+                    row.push(td.textContent.trim());
+                });
+                rows.push(row.join(','));
+            });
+            
+            // إنشاء ملف CSV
+            const csvContent = rows.join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `كشف_نهائي_${new Date().toLocaleDateString()}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // تهيئة التطبيق
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحميل البيانات المحفوظة
+            loadData();
+            
+            // إضافة مستمع حدث لصندوق البحث
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('input', function() {
+                searchStudents(this.value);
+            });
+            
+            // إضافة مستمعات الأحداث لأزرار التبويبات الرئيسية
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    // إزالة الفئة النشطة من جميع الأزرار
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // إضافة الفئة النشطة للزر المحدد
+                    this.classList.add('active');
+                    
+                    // إخفاء جميع محتويات التبويبات
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // إظهار محتوى التبويب المحدد
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // إذا كان التبويب هو الكشف النهائي، تحديث البيانات
+                    if (tabId === 'final') {
+                        updateFinalReport();
+                    }
+                    
+                    // تفريغ حقل البحث وإعادة عرض جميع الطلاب في الفصل النشط
+                    searchInput.value = '';
+                    searchStudents('');
+                });
+            });
+            
+            // إضافة مستمعات الأحداث لأزرار تبويبات الفصول
+            document.querySelectorAll('.class-tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const classContainer = this.closest('.class-tabs-container');
+                    
+                    // إزالة الفئة النشطة من جميع أزرار الفصول في هذا الحاوية
+                    classContainer.querySelectorAll('.class-tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // إضافة الفئة النشطة للزر المحدد
+                    this.classList.add('active');
+                    
+                    // إخفاء جميع محتويات الفصول في هذا الحاوية
+                    const classId = this.getAttribute('data-class');
+                    classContainer.querySelectorAll('.class-tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // إظهار محتوى الفصل المحدد
+                    document.getElementById(classId).classList.add('active');
+                    
+                    // تفريغ حقل البحث وإعادة عرض جميع الطلاب في الفصل النشط
+                    searchInput.value = '';
+                    searchStudents('');
+                });
+            });
+            
+            // دالة لإخفاء/إظهار قسم الإضافة الدفعة الواحدة
+            function setupBatchSectionToggle(grade) {
+                const toggleBtn = document.getElementById(`toggle-batch-${grade}`);
+                const batchSection = document.getElementById(`batch-add-${grade}`);
+                
+                toggleBtn.addEventListener('click', function() {
+                    batchSection.classList.toggle('collapsed');
+                    
+                    if (batchSection.classList.contains('collapsed')) {
+                        toggleBtn.innerHTML = '<i class="fas fa-eye"></i> إظهار';
+                    } else {
+                        toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء';
+                    }
+                });
+            }
+            
+            // إعداد أزرار إخفاء/إظهار الإضافة الدفعة الواحدة
+            setupBatchSectionToggle('first');
+            setupBatchSectionToggle('second');
+            setupBatchSectionToggle('third');
+            
+            // دالة لإنشاء مستمعات الأحداث لأزرار إضافة الطلاب
+            function setupAddStudentListeners() {
+                // إعداد المستمعات لأزرار إضافة الطلاب لكل فصل
+                for (const grade in classesStructure) {
+                    classesStructure[grade].forEach((className, index) => {
+                        const classNum = index + 1;
+                        const classId = `${grade}-${classNum}`;
+                        
+                        // زر إضافة طالب فردي
+                        const addButton = document.getElementById(`add-student-${classId}`);
+                        if (addButton) {
+                            addButton.addEventListener('click', function() {
+                                const input = document.getElementById(`student-name-${classId}`);
+                                const studentName = input.value.trim();
+                                
+                                if (studentName) {
+                                    addStudentToDOM(classId, studentName, className);
+                                    input.value = '';
+                                    
+                                    // فرز الطلاب أبجدياً بعد الإضافة
+                                    setTimeout(() => {
+                                        sortStudentsAlphabetically(`students-container-${classId}`);
+                                    }, 100);
+                                    
+                                    saveData();
+                                    updateFinalReport();
+                                } else {
+                                    alert('الرجاء إدخال اسم الطالب');
+                                }
+                            });
+                        }
+                        
+                        // السماح بإضافة الطلاب باستخدام مفتاح Enter
+                        const nameInput = document.getElementById(`student-name-${classId}`);
+                        if (nameInput) {
+                            nameInput.addEventListener('keypress', function(e) {
+                                if (e.key === 'Enter') {
+                                    document.getElementById(`add-student-${classId}`).click();
+                                }
+                            });
+                        }
+                    });
+                    
+                    // زر إضافة طلاب دفعة واحدة
+                    const batchAddBtn = document.getElementById(`batch-add-btn-${grade}`);
+                    if (batchAddBtn) {
+                        batchAddBtn.addEventListener('click', function() {
+                            const classSelect = document.getElementById(`batch-class-select-${grade}`);
+                            const selectedClass = classSelect.value;
+                            addStudentsBatch(grade, selectedClass);
+                        });
+                    }
+                }
+            }
+            
+            // استدعاء دالة إعداد مستمعات الأحداث
+            setupAddStudentListeners();
+            
+            // إضافة مستمعات الأحداث لفلاتر الكشف النهائي
+            document.getElementById('filter-grade').addEventListener('change', updateFinalReport);
+            document.getElementById('filter-class').addEventListener('change', updateFinalReport);
+            document.getElementById('filter-score').addEventListener('change', updateFinalReport);
+            document.getElementById('refresh-report').addEventListener('click', updateFinalReport);
+            document.getElementById('export-report').addEventListener('click', exportReport);
+            
+            // حفظ البيانات عند إغلاق الصفحة
+            window.addEventListener('beforeunload', saveData);
+            
+            // فرز الطلاب أبجدياً عند تحميل الصفحة
+            setTimeout(() => {
+                const allContainers = document.querySelectorAll('[id^="students-container-"]');
+                allContainers.forEach(container => {
+                    sortStudentsAlphabetically(container.id);
+                });
+                updateFinalReport();
+            }, 500);
+        });
+    
+        // ===== إدارة الاختبارات القصيرة =====
+        let currentShortTestsStudentId = null;
+
+        function getHijriDateWithDay(){
+            // نفس دالتك الأصلية لإرجاع التاريخ الهجري مع اليوم
+            const now = new Date();
+            try{
+                const hijri = new Intl.DateTimeFormat('ar-SA-islamic', {weekday:'long', day:'numeric', month:'numeric', year:'numeric'}).format(now);
+                return hijri;
+            }catch(e){
+                // fallback
+                const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+                return `${days[now.getDay()]}، ${now.toLocaleDateString('ar-SA')}`;
+            }
+        }
+
+        function openShortTestsModal(studentId){
+            currentShortTestsStudentId = studentId;
+            const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
+            const studentName = studentItem.querySelector('.student-name span').textContent;
+            document.getElementById('shortTestsStudentName').textContent = studentName;
+            renderShortTestsList(studentId);
+            document.getElementById('shortTestsModal').classList.add('active');
+            updateShortTestsScoreDisplay(studentId);
+        }
+        function closeShortTestsModal(){
+            document.getElementById('shortTestsModal').classList.remove('active');
+            currentShortTestsStudentId = null;
+        }
+        function updateShortTestsScoreDisplay(studentId){
+            const score = recalculateScore(studentId);
+            const el = document.getElementById('shortTestsCurrentScore');
+            if(el){
+                el.textContent = score;
+                el.className = score >= 80 ? 'badge-pos' : score >= 60 ? 'badge-pos' : 'badge-neg';
+                el.style.background = score >= 90 ? '#dcfce7' : score >= 70 ? '#fef3c7' : '#fee2e2';
+            }
+        }
+        function renderShortTestsList(studentId){
+            const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
+            let shortTests = [];
+            try{ shortTests = JSON.parse(studentItem.dataset.shortTests || '[]'); }catch(e){}
+            const listEl = document.getElementById('shortTestsList');
+            listEl.innerHTML = '';
+            if(shortTests.length === 0){
+                listEl.innerHTML = '<div style="text-align:center; color:#94a3b8; padding:20px;">لا توجد اختبارات مسجلة</div>';
+            } else {
+                shortTests.forEach((test, idx)=>{
+                    const row = document.createElement('div');
+                    row.className = 'short-test-row';
+                    row.innerHTML = `
+                        <div class="date-label"><i class="fas fa-calendar"></i> ${test.date}</div>
+                        <input type="number" class="grade-input" placeholder="0" value="${test.grade}" min="-40" max="0" data-index="${idx}" title="أدخل الدرجة بالناقص">
+                        <button class="delete-test" data-index="${idx}" title="حذف"><i class="fas fa-trash"></i></button>
+                    `;
+                    listEl.appendChild(row);
+                });
+                // إضافة مستمعات
+                listEl.querySelectorAll('.grade-input').forEach(inp=>{
+                    inp.setAttribute('min','-40');
+                    inp.setAttribute('max','0');
+                    inp.addEventListener('input', function(){
+                        let v = parseInt(this.value);
+                        if(isNaN(v)) v = 0;
+                        // المسموح من 0 إلى -40 فقط
+                        if(v > 0) v = 0;
+                        if(v < -40) v = -40;
+                        this.value = v;
+                        let idx = parseInt(this.dataset.index);
+                        shortTests[idx].grade = v;
+                        studentItem.dataset.shortTests = JSON.stringify(shortTests);
+                        recalculateScore(studentId);
+                        updateShortTestsScoreDisplay(studentId);
+                        saveData();
+                        updateFinalReport();
+                    });
+                    inp.addEventListener('change', function(){
+                        let v = parseInt(this.value);
+                        if(isNaN(v)) v = 0;
+                        if(v > 0) v = 0;
+                        if(v < -40) v = -40;
+                        this.value = v;
+                    });
+                });
+                listEl.querySelectorAll('.delete-test').forEach(btn=>{
+                    btn.addEventListener('click', function(){
+                        let idx = parseInt(this.dataset.index);
+                        shortTests.splice(idx,1);
+                        studentItem.dataset.shortTests = JSON.stringify(shortTests);
+                        renderShortTestsList(studentId);
+                        recalculateScore(studentId);
+                        updateShortTestsScoreDisplay(studentId);
+                        saveData();
+                        updateFinalReport();
+                    });
+                });
+            }
+        }
+        function handleAddShortTest(){
+            if(!currentShortTestsStudentId){
+                alert('حدث خطأ، أعد فتح نافذة الاختبارات');
+                return;
+            }
+            const studentItem = document.querySelector(`.student-item[data-id="${currentShortTestsStudentId}"]`);
+            if(!studentItem) return;
+            let shortTests = [];
+            try{ shortTests = JSON.parse(studentItem.dataset.shortTests || '[]'); }catch(e){ shortTests = []; }
+            shortTests.push({
+                id: Date.now(),
+                date: (typeof getHijriDateWithDay === 'function' ? getHijriDateWithDay() : (typeof getHijriDate === 'function' ? getHijriDate() : new Date().toLocaleDateString('ar-SA'))),
+                grade: 0
+            });
+            studentItem.dataset.shortTests = JSON.stringify(shortTests);
+            renderShortTestsList(currentShortTestsStudentId);
+            recalculateScore(currentShortTestsStudentId);
+            updateShortTestsScoreDisplay(currentShortTestsStudentId);
+            saveData();
+            updateFinalReport();
+        }
+        // ربط الزر مرة واحدة فقط - إصلاح مشكلة الإضافة الثلاثية
+        function bindAddButton(){
+            const btn = document.getElementById('addShortTestBtn');
+            if(btn){
+                // إزالة أي مستمعات قديمة
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+                newBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleAddShortTest();
+                });
+            }
+        }
+        setTimeout(bindAddButton, 100);
+        // إعادة الربط عند فتح المودال
+        const originalOpenShortTestsModal = openShortTestsModal;
+        openShortTestsModal = function(studentId){
+            originalOpenShortTestsModal(studentId);
+            setTimeout(bindAddButton, 50);
+        };
+
+
+
+        // ===== كشف السلوك الشامل =====
+        function openBehaviorReportModal(studentId){
+            const studentItem = document.querySelector(`.student-item[data-id="${studentId}"]`);
+            const studentName = studentItem.querySelector('.student-name span').textContent;
+            document.getElementById('behaviorReportStudentName').textContent = studentName;
+            const tbody = document.getElementById('behaviorReportBody');
+            const summaryEl = document.getElementById('behaviorReportSummary');
+            tbody.innerHTML = '';
+
+            // جمع السلوكيات
+            const rows = studentItem.querySelectorAll('tbody tr');
+            let behaviorDeductions = 0;
+            let details = [];
+            rows.forEach(r=>{
+                const date = r.querySelector('.date-column')?.textContent || '';
+                const checks = [];
+                if(r.querySelector('.talked-checkbox')?.checked) checks.push({type:'تحدث', desc:'تحدث في الحصة', deduct:2});
+                if(r.querySelector('.forgot-book-checkbox')?.checked) checks.push({type:'نسي الكتاب', desc:'نسي الكتاب', deduct:2});
+                if(r.querySelector('.late-checkbox')?.checked) checks.push({type:'متأخر', desc:'تأخر عن الحصة', deduct:2});
+                if(r.querySelector('.forgot-pen-checkbox')?.checked) checks.push({type:'نسي القلم', desc:'نسي القلم', deduct:2});
+                if(r.querySelector('.sleeping-checkbox')?.checked) checks.push({type:'نائم', desc:'نائم في الحصة', deduct:2});
+                if(r.querySelector('.other-checkbox')?.checked){
+                    let otherText = r.querySelector('.other-behavior-input')?.value || 'سلوك آخر';
+                    checks.push({type:'أخرى', desc: otherText, deduct:2});
+                }
+                checks.forEach(ch=>{
+                    behaviorDeductions += ch.deduct;
+                    details.push({date:date, type:ch.type, desc:ch.desc, deduct:ch.deduct});
+                });
+            });
+
+            // جمع الاختبارات القصيرة
+            let shortTests = [];
+            try{ shortTests = JSON.parse(studentItem.dataset.shortTests || '[]'); }catch(e){}
+            let testsDeduction = 0;
+            shortTests.forEach(t=>{
+                let g = parseInt(t.grade);
+                if(isNaN(g)) g = 0;
+                let d = Math.abs(g);
+                testsDeduction += d;
+                details.push({date:t.date, type:'اختبار قصير', desc:`اختبار قصير (${g})`, deduct:d});
+            });
+
+            // ترتيب حسب التاريخ (نصي)
+            // عرض التفاصيل
+            if(details.length === 0){
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:20px;">لا توجد مخالفات أو اختبارات مسجلة - الطالب ممتاز!</td></tr>';
+            } else {
+                details.forEach(d=>{
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${d.date}</td>
+                        <td><span style="background:#f1f5f9; padding:4px 8px; border-radius:6px;">${d.type}</span></td>
+                        <td>${d.desc}</td>
+                        <td><span class="badge-neg">-${d.deduct}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            const totalDeduct = behaviorDeductions + testsDeduction;
+            const finalScore = Math.max(0, 100 - totalDeduct);
+            summaryEl.innerHTML = `
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+                    <div>إجمالي خصم السلوك: <span class="badge-neg">${behaviorDeductions}</span></div>
+                    <div>إجمالي خصم الاختبارات: <span class="badge-neg">${testsDeduction}</span></div>
+                    <div>المجموع الكلي للخصم: <span class="badge-neg">${totalDeduct}</span></div>
+                    <div>الدرجة النهائية: <span class="${finalScore>=60?'badge-pos':'badge-neg'}" style="font-size:1.1rem;">${finalScore} / 100</span></div>
+                </div>
+                <div style="margin-top:10px; font-size:0.85rem; color:#64748b;">هذا الكشف يوضح جميع الملاحظات السلوكية والاختبارات القصيرة للطالب ويمكن تقديمه لولي الأمر</div>
+            `;
+
+            document.getElementById('behaviorReportModal').classList.add('active');
+        }
+        function closeBehaviorReportModal(){
+            document.getElementById('behaviorReportModal').classList.remove('active');
+        }
+        function printBehaviorReport(){
+            const content = document.getElementById('behaviorReportModal').querySelector('.modal-box').innerHTML;
+            const w = window.open('', '_blank');
+            w.document.write(`<html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>كشف السلوك</title>
+            <style>body{font-family:Cairo, Tahoma; padding:20px;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #ccc; padding:8px; text-align:center;} th{background:#f1f5f9;}</style>
+            </head><body>${content}<script>window.print();<\/script></body></html>`);
+            w.document.close();
+        }
+
+        // إغلاق المودال عند الضغط خارجه
+        document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+            overlay.addEventListener('click', function(e){
+                if(e.target === this){
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+
+    </script>
+
+    <!-- مودال الاختبارات القصيرة -->
+    <div id="shortTestsModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-check"></i> الاختبارات القصيرة - <span id="shortTestsStudentName"></span></h3>
+                <button class="modal-close" onclick="closeShortTestsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="report-summary">
+                    <div>الدرجة الحالية: <span id="shortTestsCurrentScore" class="badge-pos">100</span> / 100</div>
+                    <small style="color:#64748b;">أدخل درجة الخصم (0 إلى -40) ليتم خصمها من المجموع الكلي 100 - اتركها 0 إذا لم يكن هناك خصم</small>
+                </div>
+                <div id="shortTestsList"></div>
+                <button id="addShortTestBtn" style="width:100%; margin-top:15px; padding:12px; background:linear-gradient(135deg,#8b5cf6,#6366f1); color:white; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">
+                    <i class="fas fa-plus"></i> إضافة اختبار
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeShortTestsModal()" style="padding:10px 20px; background:#e9ecef; border:none; border-radius:8px; cursor:pointer;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال كشف السلوك -->
+    <div id="behaviorReportModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:800px;">
+            <div class="modal-header" style="background:linear-gradient(135deg,#06b6d4,#0ea5e9);">
+                <h3><i class="fas fa-file-alt"></i> كشف السلوك - <span id="behaviorReportStudentName"></span></h3>
+                <button class="modal-close" onclick="closeBehaviorReportModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="report-summary" id="behaviorReportSummary"></div>
+                <div style="overflow-x:auto;">
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>نوع المخالفة / الاختبار</th>
+                                <th>التفاصيل</th>
+                                <th>الخصم</th>
+                            </tr>
+                        </thead>
+                        <tbody id="behaviorReportBody"></tbody>
+                    </table>
+                </div>
+                <div style="margin-top:20px; display:flex; gap:10px;">
+                    <button onclick="printBehaviorReport()" style="flex:1; padding:12px; background:#0ea5e9; color:white; border:none; border-radius:10px; cursor:pointer;"><i class="fas fa-print"></i> طباعة الكشف لولي الأمر</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeBehaviorReportModal()" style="padding:10px 20px; background:#e9ecef; border:none; border-radius:8px; cursor:pointer;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
